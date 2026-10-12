@@ -1,0 +1,22 @@
+{
+  "name": "CineLens AI - Fire TV Viewing Companion",
+  "short_name": "CineLens AI",
+  "description": "Multi-modal AI companion for Fire TV powered by Amazon Bedrock. Get real-time scene insights, character bios, spoiler-free recaps, and interactive trivia with your remote control.",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "theme_color": "#0F172A",
+  "background_color": "#0B0F19",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "amazon": {
+    "fullscreen": true,
+    "lockOrientation": "landscape",
+    "supportedDevices": ["firetv", "fireos", "vegaos"]
+  }
+}

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CineLens AI - Fire TV Viewing Companion</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div class="tv-viewport" id="tvViewport">
+    
+    <!-- Video Playback Stage -->
+    <div class="video-stage">
+      <video id="mainVideo" loop playsinline preload="auto">
+        <!-- Sample high quality open cinematic video -->
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4">
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video-overlay-gradient"></div>
+    </div>
+
+    <!-- Top Safe Area Header -->
+    <header class="tv-top-bar">
+      <div class="brand-badge">
+        <div class="brand-icon">▶</div>
+        <span class="brand-name">CineLens AI</span>
+        <span class="brand-tag">Fire TV OS & Vega</span>
+      </div>
+
+      <div class="video-meta-badge" id="videoTitleBadge">
+        🎬 Tears of Steel (Sci-Fi / Cyberpunk) • 1080p HDR
+      </div>
+    </header>
+
+    <!-- Prominent AI Trigger Pill (Top Right) -->
+    <div class="lens-trigger-pill focusable" id="triggerPill" tabindex="0">
+      <span class="key-hint">Press Menu / OK</span>
+      <span>✨ CineLens AI Inspector</span>
+    </div>
+
+    <!-- Bottom Player Control Dock -->
+    <div class="player-dock" id="playerDock">
+      <div class="timeline-row">
+        <div class="timeline-bar-bg" id="timelineBar">
+          <div class="timeline-progress" id="timelineProgress"></div>
+        </div>
+        <div class="time-readout" id="timeReadout">00:00 / 12:14</div>
+      </div>
+
+      <div class="controls-row">
+        <div class="controls-group">
+          <button class="tv-btn primary focusable" id="playPauseBtn" tabindex="0">
+            <span id="playIcon">⏸</span> <span id="playText">Pause</span>
+          </button>
+          <button class="tv-btn focusable" id="openLensBtn" tabindex="0">
+            ✨ Open AI Lens
+          </button>
+          <button class="tv-btn focusable" id="switchMovieBtn" tabindex="0">
+            🎞 Switch Title
+          </button>
+        </div>
+
+        <div class="controls-group">
+          <span style="font-size: 13px; color: var(--text-muted);">
+            Remote: <strong>D-Pad</strong> navigate • <strong>[OK/Select]</strong> confirm • <strong>[Back]</strong> dismiss
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CineLens AI Slide-over Overlay -->
+    <aside class="cinelens-drawer" id="cinelensDrawer" aria-hidden="true">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <h2 class="drawer-title">CineLens AI</h2>
+          <span class="bedrock-tag">Amazon Bedrock</span>
+        </div>
+        <div class="drawer-close-hint">Press <strong>[Back / Esc]</strong> to resume</div>
+      </div>
+
+      <!-- Quick AI Query Chips -->
+      <section class="query-chips-section">
+        <div class="section-label">Contextual Inquiries (D-Pad Select)</div>
+        <div class="chips-container" id="chipsContainer">
+          <button class="chip-btn focusable" data-query="explain_scene" tabindex="0">
+            🔍 Explain Scene
+          </button>
+          <button class="chip-btn focusable" data-query="who_is_on_screen" tabindex="0">
+            🎭 Who's On Screen?
+          </button>
+          <button class="chip-btn focusable" data-query="recap_spoiler_free" tabindex="0">
+            ⏪ 10-Min Recap
+          </button>
+          <button class="chip-btn focusable" data-query="dialogue_subtext" tabindex="0">
+            💬 Dialogue Subtext
+          </button>
+          <button class="chip-btn focusable" data-query="soundtrack" tabindex="0">
+            🎵 Soundtrack
+          </button>
+          <button class="chip-btn focusable" data-query="custom_prompt" tabindex="0">
+            🎙️ Voice Question
+          </button>
+        </div>
+      </section>
+
+      <!-- Scrollable AI Content Stream -->
+      <div class="drawer-content-scroll" id="drawerContent">
+        <!-- AI Response Box -->
+        <div class="ai-response-card" id="aiCard">
+          <div class="ai-response-header">
+            <div class="ai-response-title">
+              <span id="aiStatusIcon">⚡</span>
+              <span id="aiQueryTitle">Scene Analysis</span>
+            </div>
+            <div class="ai-loader" id="aiLoader" style="display: none;">
+              <div class="spinner"></div>
+              <span>Querying Amazon Bedrock...</span>
+            </div>
+          </div>
+          <div class="ai-response-body" id="aiResponseText">
+            Select an inquiry above or press Enter to generate real-time multi-modal scene insights powered by Amazon Bedrock.
+          </div>
+        </div>
+
+        <!-- Cast & Characters On Screen -->
+        <div>
+          <div class="section-label">Identified In Current Scene</div>
+          <div class="cast-grid" id="castGrid">
+            <!-- Dynamically populated or mock cast -->
+          </div>
+        </div>
+
+        <!-- Scene Trivia & Easter Eggs -->
+        <div>
+          <div class="section-label">Scene Trivia & Context Lore</div>
+          <div class="trivia-box" id="triviaBox">
+            Detecting scene metadata... Pausing the video automatically activates the multi-modal contextual buffer.
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- On-Screen Fire TV Remote Simulator HUD (Great for Demos, Testing, & Video Captures) -->
+    <button class="virtual-remote-toggle" id="remoteToggleBtn">
+      📱 Toggle Virtual Remote
+    </button>
+
+    <div class="virtual-remote-hud" id="virtualRemoteHud">
+      <div class="remote-brand">Fire TV Remote</div>
+
+      <!-- D-Pad Navigation -->
+      <div class="d-pad-circle">
+        <button class="d-pad-btn d-pad-up" id="dpadUp" title="Up">▲</button>
+        <button class="d-pad-btn d-pad-left" id="dpadLeft" title="Left">◀</button>
+        <button class="d-pad-center" id="dpadCenter" title="Select / OK">OK</button>
+        <button class="d-pad-btn d-pad-right" id="dpadRight" title="Right">▶</button>
+        <button class="d-pad-btn d-pad-down" id="dpadDown" title="Down">▼</button>
+      </div>
+
+      <!-- Navigation & Playback Buttons -->
+      <div class="remote-nav-actions">
+        <button class="remote-action-btn" id="remoteBack" title="Back (Esc / Key 8)">↩ Back</button>
+        <button class="remote-action-btn" id="remotePlayPause" title="Play / Pause">⏯ Play</button>
+      </div>
+
+      <div class="remote-nav-actions">
+        <button class="remote-action-btn ai" id="remoteAiLens" title="AI Menu">✨ AI Lens</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
